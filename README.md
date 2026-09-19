@@ -44,6 +44,11 @@ Designed specifically for older adults (ages 60+) who face cognitive fatigue, de
 ### 5. 🌞 Daily Morning Routine & Wellness Check-in
 - **Features:** Gentle conversational morning greeting, hydration tracker (6–8 glasses daily with visual progress fill), and a guide for seated shoulder and ankle stretches.
 
+### 6. 🌐 Multilingual Indic Language Switcher (7 Regional Languages)
+- **Supported Languages:** English, Hindi (हिन्दी), Tamil (தமிழ்), Telugu (తెలుగు), Bengali (বাংলা), Marathi (मराठी), and Gujarati (ગુજરાતી).
+- **Indic Voice I/O:** Regional Speech-to-Text (`SpeechRecognition`) and localized Speech Synthesis (`SpeechSynthesisUtterance`) with native pronunciation.
+- **Culturally Respectful:** Applies respectful Indian honorifics (e.g. 'आप', Devanagari numerals) and zero technical intimidation so seniors from any state feel at home.
+
 ---
 
 ## 📋 Assumptions Made
@@ -88,7 +93,7 @@ Designed specifically for older adults (ages 60+) who face cognitive fatigue, de
 python -m unittest tests/test_companion.py
 ```
 ```text
-Ran 12 tests in 1.449s - OK
+Ran 13 tests in 1.726s - OK
 - test_01_health_and_accessibility: PASSED (WCAG 2.1 AAA & OWASP L2)
 - test_02_medicine_guidance_stream: PASSED (Pill schedule & dosage verified)
 - test_03_scam_detection_guardrail: PASSED (Fraud warning guardrail active)
@@ -101,6 +106,7 @@ Ran 12 tests in 1.449s - OK
 - test_10_lru_cache_efficiency: PASSED (Sub-10ms cache hit response verified)
 - test_11_metrics_and_resource_usage: PASSED (Memory footprint & cache stats verified)
 - test_12_multimodal_attachment_handling: PASSED (Base64 image MIME type validated)
+- test_13_multilingual_indic_support: PASSED (Hindi & Indic language localization verified)
 ```
 
 ---
