@@ -41,8 +41,21 @@
           <span id="voice-icon">🔊</span> <span id="voice-label">Voice: ON</span>
         </button>
 
+        <div class="lang-selector-wrap">
+          <span class="toolbar-label" style="font-size:18px;">🌐</span>
+          <select id="lang-select" class="lang-dropdown" onchange="changeLanguage(this.value)" aria-label="Choose Language">
+            <option value="en" selected>English</option>
+            <option value="hi">हिन्दी (Hindi)</option>
+            <option value="ta">தமிழ் (Tamil)</option>
+            <option value="te">తెలుగు (Telugu)</option>
+            <option value="bn">বাংলা (Bengali)</option>
+            <option value="mr">मराठी (Marathi)</option>
+            <option value="gu">ગુજરાતી (Gujarati)</option>
+          </select>
+        </div>
+
         <button class="btn-tool" onclick="printSeniorSummary()" title="Print Large-Print Reminder Card">
-          <span>🖨️</span> <span>Print Card</span>
+          <span>🖨️</span> <span id="label-print">Print Card</span>
         </button>
 
         <button class="btn-tool key-btn" onclick="openKeyModal()" title="Gemini API Key Settings">
