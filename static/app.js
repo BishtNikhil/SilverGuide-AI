@@ -97,7 +97,6 @@ function selectAction(type) {
 
   if (type === 'medicine') {
     input.value = "Please explain my medicine dosage, when to take it, and any food warnings in big clear letters.";
-    // Prompt to take or attach photo
     document.getElementById('file-input').click();
   } else if (type === 'scam') {
     input.value = "I received this suspicious SMS/WhatsApp message claiming my bank account is blocked. Is this a scam?";
@@ -105,6 +104,12 @@ function selectAction(type) {
   } else if (type === 'bill') {
     input.value = "Please explain this electricity bill: how much do I need to pay, what is the due date, and how do I pay it safely?";
     input.focus();
+  } else if (type === 'emergency') {
+    input.value = "Generate my Emergency Medical SOS Card with my blood group, chronic conditions, active medications, and doctor contacts.";
+    sendPrompt();
+  } else if (type === 'wellness') {
+    input.value = "Good morning! Can you check in with me on my daily wellness routine, hydration, and morning medication?";
+    sendPrompt();
   } else if (type === 'talk') {
     input.value = "Hello! Can we talk? How is your day going?";
     toggleSpeech();
