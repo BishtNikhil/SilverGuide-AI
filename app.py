@@ -527,9 +527,13 @@ async def health_check():
 @app.get("/api/metrics")
 async def performance_metrics():
     """Returns efficiency, caching, and resource performance metrics."""
-    import psutil
-    process = psutil.Process(os.getpid()) if "psutil" in sys.modules else None
-    mem_mb = round(process.memory_info().rss / 1024 / 1024, 2) if process else 42.5
+    mem_mb = 42.5
+    try:
+        import psutil
+        process = psutil.Process(os.getpid())
+        mem_mb = round(process.memory_info().rss / 1024 / 1024, 2)
+    except Exception:
+        pass
 
     return {
         "efficiency_tier": "HIGH_OPTIMIZATION",
@@ -570,8 +574,10 @@ if STATIC_DIR.exists():
 
 if __name__ == "__main__":
     import uvicorn
+    host = os.environ.get("HOST", "0.0.0.0")
+    port = int(os.environ.get("PORT", 8005))
     print("\n" + "="*65)
     print("👴 SILVERGUIDE AI: SENIOR CITIZEN DAILY COMPANION")
-    print("   Active URL: http://127.0.0.1:8005")
+    print(f"   Active URL: http://{host}:{port}")
     print("="*65 + "\n")
-    uvicorn.run("app:app", host="127.0.0.1", port=8005, reload=True)
+    uvicorn.run("app:app", host=host, port=port, reload=False)
