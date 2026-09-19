@@ -239,18 +239,59 @@ class CompanionOrchestrator:
             )
             speech = "Your electricity bill total is 1,420 rupees, due on October 5th. You have plenty of time to pay."
 
+        elif "emergency" in cat or "sos" in msg_lower or "doctor" in msg_lower or "hospital" in msg_lower:
+            response_md = (
+                "## 🚨 EMERGENCY & CAREGIVER MEDICAL CARD\n\n"
+                "<div class=\"alert-box danger\">\n"
+                "  <h3>🆘 Quick Medical Profile for EMTs, Doctors & Caregivers</h3>\n"
+                "  <p>Emergency Services: Call <strong>112</strong> (National Emergency) or <strong>102</strong> (Ambulance)</p>\n"
+                "</div>\n\n"
+                "### 🏥 Senior Patient Profile:\n"
+                "- **Name:** Senior Resident\n"
+                "- **Blood Group:** **O-Positive (O+)**\n"
+                "- **Known Chronic Conditions:** Type-2 Diabetes, Mild Hypertension\n"
+                "- **Critical Drug Allergies:** 🚫 **Penicillin Allergy** (Severe)\n"
+                "- **Active Daily Medications:** Metformin 500mg (2x/day), Amlodipine 5mg (1x/morning)\n\n"
+                "### 📞 Primary Emergency Contacts:\n"
+                "| Relationship | Contact Person | Phone Number |\n"
+                "| :--- | :--- | :--- |\n"
+                "| **Daughter (Primary)** | Priya Sharma | +91 98765 43210 |\n"
+                "| **Family Physician** | Dr. A. K. Verma | +91 98111 22334 |\n"
+                "| **Nearest Hospital** | Max Healthcare / Fortis | 102 / Local Desk |\n\n"
+                "🖨️ *Tap the \"Print Card\" button at the top to print this emergency sheet for your wallet or refrigerator.*"
+            )
+            speech = "I have displayed your emergency medical card with your blood group, active medicines, and primary emergency contacts. Call 112 if immediate help is needed."
+
+        elif "wellness" in cat or "morning" in msg_lower or "health" in msg_lower or "sleep" in msg_lower:
+            response_md = (
+                "## 🌞 Good Morning! Daily Wellness & Companion Check-in\n\n"
+                "> *\"A cheerful morning brings a peaceful day. How are you feeling today?\"*\n\n"
+                "### 📋 Gentle Morning Routine Checklist:\n"
+                "- [x] **Hydration:** Drink 1 warm glass of water to wake up your body.\n"
+                "- [ ] **Morning Medication:** Take morning blood pressure pill after light breakfast.\n"
+                "- [ ] **Gentle Stretch:** 5 minutes of seated shoulder rolls and ankle flexes.\n"
+                "- [ ] **Morning Sunshine:** 10 minutes on the balcony or garden for natural Vitamin D.\n\n"
+                "### 🌤️ Today's Climate & Health Advice:\n"
+                "- **Outdoor Air:** Moderate. Best time for a gentle walk is before 9:00 AM or after 5:30 PM.\n"
+                "- **Hydration Goal:** 6 to 8 glasses of water through the afternoon.\n\n"
+                "💬 *Would you like to hear an inspiring short story, or do you have any aches you'd like to share?*"
+            )
+            speech = "Good morning! Remember to drink a warm glass of water and take your morning medicine after breakfast. Have a peaceful, happy day."
+
         else:
             response_md = (
                 f"## 👴 Hello! SilverGuide is Here to Help You\n\n"
                 f"I understood: *\"{req.message}\"*\n\n"
                 "### 🌟 How I Can Assist You Right Now:\n"
-                "- 💊 **Decide or check your medications:** Show me a photo of your pill bottle or prescription.\n"
-                "- 🛡️ **Check suspicious messages:** Paste any text or WhatsApp forward and I'll verify if it's safe.\n"
-                "- 📄 **Explain official mail:** Show me any confusing bill, insurance form, or hospital slip.\n"
-                "- 🗣️ **Talk to me:** Click the big microphone button below and just speak naturally.\n\n"
-                "Feel free to ask me anything — take all the time you need!"
+                "- 💊 **Check medications:** Show me a photo of your pill bottle or prescription.\n"
+                "- 🛡️ **Verify suspicious messages:** Paste any SMS, bank call claim, or WhatsApp message.\n"
+                "- 📄 **Explain official mail:** Show me any electricity bill, pension notice, or form.\n"
+                "- 🚨 **Emergency Medical SOS:** 1-click medical profile with allergies & doctor contacts.\n"
+                "- 🌞 **Daily Morning Check-in:** Gentle routine, hydration tracking & friendly chat.\n"
+                "- 🗣️ **Talk to me:** Click the big microphone button and speak comfortably.\n\n"
+                "Feel free to ask anything — take all the time you need!"
             )
-            speech = "Hello! I am your SilverGuide assistant. Feel free to talk to me or show me any medicine bottle or letter."
+            speech = "Hello! I am your SilverGuide companion. Feel free to talk to me or show me any medicine bottle, bill, or message."
 
         # Stream words smoothly
         words = response_md.split(" ")
