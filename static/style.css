@@ -215,12 +215,12 @@ body {
   line-height: 1.4;
 }
 
-.action-arrow {
-  font-size: 20px;
-  color: var(--accent-blue);
-  margin-left: auto;
-  font-weight: 700;
-}
+.action-card.medicine-card { border-left: 6px solid var(--accent-blue); }
+.action-card.scam-card { border-left: 6px solid var(--accent-red); }
+.action-card.bill-card { border-left: 6px solid var(--accent-amber); }
+.action-card.emergency-card { border-left: 6px solid #e11d48; background: hsla(350, 89%, 60%, 0.05); }
+.action-card.wellness-card { border-left: 6px solid var(--accent-green); background: hsla(160, 84%, 39%, 0.05); }
+.action-card.talk-card { border-left: 6px solid #8b5cf6; }
 
 /* Main Feed Container */
 .senior-feed-container {
