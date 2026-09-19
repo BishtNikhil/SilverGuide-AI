@@ -51,45 +51,80 @@
       </div>
     </header>
 
+    <!-- Proactive Assistance Wellness & Hydration Bar (Beyond Chatbot) -->
+    <section class="proactive-wellness-bar" aria-label="Proactive Assistance">
+      <div class="wellness-card-strip">
+        <div class="wellness-item">
+          <span class="wellness-icon">💧</span>
+          <div class="wellness-details">
+            <span class="wellness-title">Daily Hydration Goal</span>
+            <span class="wellness-metric" id="hydration-count">4 / 8 Glasses</span>
+          </div>
+          <div class="hydration-track">
+            <div class="hydration-fill" id="hydration-fill" style="width: 50%;"></div>
+          </div>
+          <button class="btn-mini-action" onclick="addWaterGlass()">+1 Glass</button>
+        </div>
+
+        <div class="wellness-item">
+          <span class="wellness-icon">🧘</span>
+          <div class="wellness-details">
+            <span class="wellness-title">Gentle Seated Stretches</span>
+            <span class="wellness-metric">5 mins shoulder rolls</span>
+          </div>
+          <button class="btn-mini-action" onclick="selectAction('wellness')">Guide Me</button>
+        </div>
+
+        <div class="wellness-item">
+          <span class="wellness-icon">🚨</span>
+          <div class="wellness-details">
+            <span class="wellness-title">Emergency Medical SOS</span>
+            <span class="wellness-metric">Doctor & Caregiver Card</span>
+          </div>
+          <button class="btn-mini-action danger-badge" onclick="selectAction('emergency')">View SOS</button>
+        </div>
+      </div>
+    </section>
+
     <!-- 6 Big Senior Quick-Action Hubs (Connected Workflows) -->
     <section class="action-hubs-container" aria-label="Daily Helper Hubs">
-      <div class="action-card medicine-card" onclick="selectAction('medicine')">
+      <div class="action-card medicine-card" id="btn-medicine-hub" onclick="selectAction('medicine')">
         <div class="action-icon">💊</div>
         <div class="action-info">
           <h3>Medicine & Pills Helper</h3>
-          <p>Photo of pill bottle or prescription to see dosage & times in big clear letters.</p>
+          <p>Decodes prescriptions & pill bottles into a clear daily schedule with meal rules.</p>
         </div>
         <span class="action-arrow">➔</span>
       </div>
 
-      <div class="action-card scam-card" onclick="selectAction('scam')">
+      <div class="action-card scam-card" id="btn-scam-hub" onclick="selectAction('scam')">
         <div class="action-icon">🛡️</div>
         <div class="action-info">
           <h3>Is This a Scam?</h3>
-          <p>Paste suspicious bank SMS, lottery messages, or WhatsApp calls to verify safety.</p>
+          <p>Instant fraud detection for suspicious banking SMS, power cut threats & fake OTPs.</p>
         </div>
         <span class="action-arrow">➔</span>
       </div>
 
-      <div class="action-card bill-card" onclick="selectAction('bill')">
+      <div class="action-card bill-card" id="btn-bill-hub" onclick="selectAction('bill')">
         <div class="action-icon">📄</div>
         <div class="action-info">
           <h3>Explain My Bill or Mail</h3>
-          <p>Shows how much to pay, the due date, and what official letters mean in plain English.</p>
+          <p>Translates complex utility bills into 3 facts: Who sent it, Amount due & How to pay.</p>
         </div>
         <span class="action-arrow">➔</span>
       </div>
 
-      <div class="action-card emergency-card" onclick="selectAction('emergency')">
+      <div class="action-card emergency-card" id="btn-emergency-hub" onclick="selectAction('emergency')">
         <div class="action-icon">🚨</div>
         <div class="action-info">
           <h3>Medical SOS Card</h3>
-          <p>Instant medical sheet with blood group, allergies, active medicines & doctor contacts.</p>
+          <p>1-click medical profile with blood group, drug allergies, active meds & doctor contacts.</p>
         </div>
         <span class="action-arrow">➔</span>
       </div>
 
-      <div class="action-card wellness-card" onclick="selectAction('wellness')">
+      <div class="action-card wellness-card" id="btn-wellness-hub" onclick="selectAction('wellness')">
         <div class="action-icon">🌞</div>
         <div class="action-info">
           <h3>Daily Morning Check-in</h3>
@@ -98,11 +133,11 @@
         <span class="action-arrow">➔</span>
       </div>
 
-      <div class="action-card talk-card" onclick="selectAction('talk')">
+      <div class="action-card talk-card" id="btn-talk-hub" onclick="selectAction('talk')">
         <div class="action-icon">🗣️</div>
         <div class="action-info">
           <h3>Talk With Me (Voice)</h3>
-          <p>Ask anything by speaking with your voice. I will speak back clearly and gently.</p>
+          <p>Hands-free voice assistant. Speak naturally and listen to clear spoken audio.</p>
         </div>
         <span class="action-arrow">➔</span>
       </div>
@@ -111,8 +146,8 @@
     <!-- Main Results & Conversation Feed -->
     <main class="senior-feed-container" id="feed-container" role="main">
       <div class="welcome-banner" id="welcome-banner">
-        <h2>Welcome! How can I help you today?</h2>
-        <p>Pick one of the 4 big buttons above, or speak to me using the big microphone button at the bottom.</p>
+        <h2>Welcome to SilverGuide! How may I assist you today?</h2>
+        <p>Tap any of the 6 big action cards above, or speak using the large microphone button below.</p>
         <div class="safe-tag">
           <span>🔒 100% Safe & Private</span>
           <span>•</span>
@@ -128,53 +163,53 @@
     <footer class="senior-input-dock" role="contentinfo">
       <!-- Attachment preview -->
       <div class="attachment-preview" id="attachment-preview" style="display: none;">
-        <span class="att-icon">📎</span>
-        <span class="att-name" id="attachment-name">photo.jpg</span>
-        <button class="att-remove" onclick="clearAttachment()">✕ Remove</button>
+        <span id="attachment-name"></span>
+        <button class="btn-clear-att" onclick="clearAttachment()" title="Remove Attachment">✕ Remove</button>
       </div>
 
-      <div class="input-bar">
-        <!-- Hidden file input -->
-        <input type="file" id="file-input" accept="image/*,application/pdf" style="display: none;" onchange="handleFileSelected(event)">
+      <div class="input-row">
+        <!-- Hidden file input for photos of medicine or bills -->
+        <input type="file" id="file-input" accept="image/*,application/pdf" style="display:none;" onchange="handleFileSelected(event)">
 
-        <!-- Photo upload button -->
-        <button class="dock-btn upload-btn" onclick="document.getElementById('file-input').click()" title="Attach Photo of Medicine, Bill, or Letter">
-          <span class="btn-icon">📷</span>
-          <span class="btn-text">Add Photo</span>
+        <button class="btn-dock btn-camera" onclick="document.getElementById('file-input').click()" title="Attach photo of medicine label or bill">
+          <span class="dock-icon">📷</span>
+          <span class="dock-label">Add Photo</span>
         </button>
 
-        <!-- Big Voice Mic Button -->
-        <button class="dock-btn mic-btn" id="mic-btn" onclick="toggleSpeech()" title="Click to Speak using Microphone">
-          <span class="btn-icon" id="mic-icon">🎙️</span>
-          <span class="btn-text" id="mic-text">Speak Now</span>
+        <button class="btn-dock btn-mic" id="mic-btn" onclick="toggleSpeech()" title="Click to speak your question">
+          <span class="dock-icon">🎙️</span>
+          <span class="dock-label" id="mic-text">Speak Now</span>
         </button>
 
-        <!-- Text input -->
-        <textarea
-          id="prompt-input"
-          class="senior-textarea"
-          placeholder="Ask a question or describe your medicine bottle... (or click Speak Now)"
-          rows="1"
-        ></textarea>
+        <div class="text-input-wrap">
+          <input 
+            type="text" 
+            id="prompt-input" 
+            placeholder="Ask a question or describe your medicine bottle... (or click Speak Now)" 
+            aria-label="Ask your companion"
+            autocomplete="off"
+          />
+        </div>
 
-        <!-- Big Send Button -->
-        <button class="dock-btn send-btn" id="send-btn" onclick="sendPrompt()" title="Ask SilverGuide">
-          <span class="btn-icon">➔</span>
-          <span class="btn-text">Ask</span>
+        <button class="btn-dock btn-send" id="send-btn" onclick="sendPrompt()" title="Send question to SilverGuide">
+          <span class="dock-icon">➔</span>
+          <span class="dock-label">Send</span>
         </button>
       </div>
     </footer>
   </div>
 
   <!-- API Key Modal -->
-  <div class="modal-overlay" id="key-modal" style="display: none;">
-    <div class="modal-card">
-      <h3>⚡ Google Gemini 2.5 Flash Settings</h3>
-      <p>Enter your Gemini API key from Google AI Studio. If left empty, SilverGuide runs in verified offline companion mode.</p>
-      <input type="password" id="api-key-input" placeholder="AIzaSy..." class="modal-input">
-      <div class="modal-actions">
-        <button class="modal-btn secondary" onclick="closeKeyModal()">Cancel</button>
-        <button class="modal-btn primary" onclick="saveApiKey()">Save Key</button>
+  <div class="modal-backdrop" id="key-modal" style="display: none;">
+    <div class="modal-box">
+      <h3>⚙️ Gemini API Configuration</h3>
+      <p style="margin-bottom:12px; color:var(--text-muted);">
+        Enter your Google Gemini API key to enable live Gemini 2.5 Flash with Multimodal Vision and Google Search Grounding.
+      </p>
+      <input type="password" id="api-key-input" placeholder="AIzaSy..." style="width:100%; padding:12px; border:2px solid var(--border-color); border-radius:8px; font-size:16px; margin-bottom:16px;">
+      <div style="display:flex; justify-content:flex-end; gap:12px;">
+        <button class="btn-tool" onclick="closeKeyModal()">Cancel</button>
+        <button class="btn-tool" style="background:var(--accent-blue); color:#fff;" onclick="saveApiKey()">Save Key</button>
       </div>
     </div>
   </div>
