@@ -187,7 +187,79 @@ class TestSilverGuideAI(unittest.TestCase):
         self.assertIn("hi", data["multilingual_languages"])
         self.assertIn("Senior Citizens", data["service"])
 
+    def test_15_bill_simplifier_workflow(self):
+        """Verify bill simplifier helps seniors navigate complex utility statements."""
+        payload = {
+            "message": "Please explain my electricity bill statement",
+            "category": "bill"
+        }
+        res = self.client.post("/api/chat/stream", json=payload)
+        self.assertEqual(res.status_code, 200)
+        text = res.text
+        self.assertTrue("Bill" in text or "Amount" in text or "Pay" in text)
+
+    def test_16_general_fallback_workflow(self):
+        """Verify general queries get helpful guidance showing all available senior workflows."""
+        payload = {
+            "message": "Hello, I need some help please",
+            "category": "general"
+        }
+        res = self.client.post("/api/chat/stream", json=payload)
+        self.assertEqual(res.status_code, 200)
+        text = res.text
+        self.assertIn("data: ", text)
+        self.assertTrue("Help" in text or "SilverGuide" in text)
+
+    def test_17_cache_miss_then_hit(self):
+        """Verify LRU cache correctly records misses and subsequent hits for efficiency."""
+        unique_key = "senior_bill_query_unique_test"
+        miss_result = RESPONSE_CACHE.get(unique_key)
+        self.assertIsNone(miss_result)
+        RESPONSE_CACHE.set(unique_key, ["data: cached_response"])
+        hit_result = RESPONSE_CACHE.get(unique_key)
+        self.assertIsNotNone(hit_result)
+        self.assertEqual(hit_result[0], "data: cached_response")
+
+    def test_18_hindi_scam_detection(self):
+        """Verify scam shield works in Hindi to protect multilingual seniors from fraud."""
+        payload = {
+            "message": "आपका बैंक खाता बंद हो जाएगा OTP भेजें",
+            "category": "scam",
+            "language": "hi"
+        }
+        res = self.client.post("/api/chat/stream", json=payload)
+        self.assertEqual(res.status_code, 200)
+        text = res.text
+        self.assertTrue("धोखाधड़ी" in text or "OTP" in text or "SCAM" in text)
+
+    def test_19_streaming_response_format(self):
+        """Verify SSE streaming format includes thought, content, critic, and verdict events."""
+        payload = {
+            "message": "Check my morning medicine schedule",
+            "category": "medicine"
+        }
+        res = self.client.post("/api/chat/stream", json=payload)
+        self.assertEqual(res.status_code, 200)
+        text = res.text
+        self.assertIn("thought", text)
+        self.assertIn("content", text)
+        self.assertIn("critic", text)
+        self.assertIn("verdict", text)
+
+    def test_20_invalid_mime_type_rejected(self):
+        """Verify unsupported file types are rejected to protect seniors from unsafe uploads."""
+        fake_data = base64.b64encode(b"fake-exe").decode("utf-8")
+        payload = {
+            "message": "Check this file",
+            "category": "medicine",
+            "attachment": {
+                "mime_type": "application/exe",
+                "data_base64": fake_data,
+                "file_name": "virus.exe"
+            }
+        }
+        res = self.client.post("/api/chat/stream", json=payload)
+        self.assertEqual(res.status_code, 422)
+
 if __name__ == "__main__":
     unittest.main()
-
-
