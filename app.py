@@ -205,7 +205,8 @@ Your core directives:
 2. MEDICINE SAFETY: When an image or text describes medicine, clearly state: Medication Name, Exact Dosage, When to take (e.g. morning/night, with or after food), and any critical warnings in big obvious bullets. Remind them gently to consult their doctor or pharmacist for medical changes.
 3. SCAM & FRAUD DEFENSE: When evaluating an SMS, message, phone call, or email, immediately assign a prominent safety rating: [SAFE] or [DANGEROUS SCAM ALERT]. Look out for OTP requests, urgency, lotteries, KYC bank threats, or unknown links. Give exact, panic-free instructions on what to do (e.g. "Do not click any link. Do not share any OTP.").
 4. BILL & LETTER SIMPLIFICATION: Break confusing official letters or bills down into 3 simple sections: (1) Who is this from, (2) Total Amount Due & Due Date, (3) What action you need to take in plain English.
-5. EMPATHY: Never make the user feel rushed or technologically inadequate. Be an encouraging, polite helper."""
+5. EMPATHY: Never make the user feel rushed or technologically inadequate. Be an encouraging, polite helper.
+6. MULTILINGUAL INDIC ACCESSIBILITY: SilverGuide natively supports multilingual seniors across Indian states. If the user writes or chooses Hindi (हिन्दी), Tamil (தமிழ்), Telugu (తెలుగు), Bengali (বাংলা), Marathi (मराठी), Gujarati (ગુજરાતી), or English, respond fluently in their preferred language using warm, respectful honorifics (e.g. 'आप' in Hindi)."""
 
 # -----------------------------------------------------------------------------
 # 4. Request & Response Schemas with Strict Boundary Validation
@@ -228,6 +229,7 @@ class MediaAttachment(BaseModel):
 class ChatRequest(BaseModel):
     message: str = Field(..., min_length=1, max_length=4000, description="User query or transcription")
     category: Optional[str] = Field(default="general", max_length=50, description="medicine, scam, bill, emergency, wellness, or general")
+    language: Optional[str] = Field(default="en", max_length=20, description="en, hi, ta, te, bn, mr, gu")
     attachment: Optional[MediaAttachment] = Field(default=None)
 
     @field_validator("message")
@@ -364,47 +366,89 @@ class CompanionOrchestrator:
 
         cat = (req.category or "").lower()
         msg_lower = req.message.lower()
+        is_hindi = (req.language == "hi") or bool(re.search(r'[\u0900-\u097F]', req.message))
 
-        if "medicine" in cat or "pill" in msg_lower or "prescription" in msg_lower or req.attachment:
-            response_md = (
-                "## 💊 Medicine & Prescription Guide\n\n"
-                "> **Important Reminder:** *Always verify with your doctor or pharmacist before changing any medication routine.*\n\n"
-                "### 📋 Clear Medication Breakdown:\n"
-                "- **Medication Name:** **Metformin Hydrochloride (500 mg)**\n"
-                "- **Purpose:** Helps gently regulate daily blood sugar levels.\n"
-                "- **When to Take:** **1 tablet twice daily**, right after your morning breakfast and evening dinner.\n"
-                "- **Important Rules:**\n"
-                "  - ✅ **Take with meals or milk** (protects your stomach).\n"
-                "  - 💧 **Drink a full glass of water** with each dose.\n"
-                "  - 🚫 **Do not crush or chew** extended-release tablets.\n\n"
-                "### ⏰ Suggested Daily Pill Schedule:\n"
-                "| Time of Day | Dose | Instructions |\n"
-                "| :--- | :--- | :--- |\n"
-                "| **Breakfast (8:30 AM)** | 1 Tablet | Take right after eating |\n"
-                "| **Dinner (8:00 PM)** | 1 Tablet | Take right after eating |\n\n"
-                "💡 *Would you like me to read this schedule out loud, or print a large-print reminder card for your fridge?*"
-            )
-            speech = "I have reviewed your medication details. Take one tablet with breakfast and one with dinner after meals. Never skip your water."
+        if "medicine" in cat or "pill" in msg_lower or "prescription" in msg_lower or "दवा" in req.message or req.attachment:
+            if is_hindi:
+                response_md = (
+                    "## 💊 दवा एवं पर्ची निर्देशिका (Medicine & Prescription Guide)\n\n"
+                    "> **महत्वपूर्ण सूचना:** *किसी भी दवा को शुरू या बंद करने से पहले हमेशा डॉक्टर से सलाह अवश्य लें।*\n\n"
+                    "### 📋 दवा का स्पष्ट विवरण:\n"
+                    "- **दवा का नाम:** **मेटफॉर्मिन हाइड्रोक्लोराइड (500 मि.ग्रा.)**\n"
+                    "- **किस लिए है:** रक्त शर्करा (ब्लड शुगर) को नियंत्रित रखने में मदद करता है।\n"
+                    "- **लेने का समय:** **दिन में दो बार (1-1 गोली)**, सुबह नाश्ते और रात के खाने के तुरंत बाद।\n"
+                    "- **मुख्य नियम:**\n"
+                    "  - ✅ **भोजन या दूध के साथ लें** (पेट की सुरक्षा के लिए)।\n"
+                    "  - 💧 **दवा के साथ 1 पूरा गिलास पानी जरूर पिएं।**\n"
+                    "  - 🚫 गोली को तोड़ें या चबाएं नहीं।\n\n"
+                    "### ⏰ दैनिक दवा समय सारणी:\n"
+                    "| समय | खुराक | निर्देश |\n"
+                    "| :--- | :--- | :--- |\n"
+                    "| **सुबह का नाश्ता (8:30 AM)** | 1 गोली | नाश्ते के तुरंत बाद लें |\n"
+                    "| **रात का खाना (8:00 PM)** | 1 गोली | रात के भोजन के तुरंत बाद लें |\n\n"
+                    "💡 *क्या आप चाहते हैं कि मैं इसे बोलकर सुनाऊं, या आपके लिए प्रिंट कार्ड तैयार करूं?*"
+                )
+                speech = "मैंने आपकी दवा की जानकारी जांच ली है। सुबह नाश्ते और रात खाने के बाद एक-एक गोली लें। पानी भरपूर पिएं।"
+            else:
+                response_md = (
+                    "## 💊 Medicine & Prescription Guide\n\n"
+                    "> **Important Reminder:** *Always verify with your doctor or pharmacist before changing any medication routine.*\n\n"
+                    "### 📋 Clear Medication Breakdown:\n"
+                    "- **Medication Name:** **Metformin Hydrochloride (500 mg)**\n"
+                    "- **Purpose:** Helps gently regulate daily blood sugar levels.\n"
+                    "- **When to Take:** **1 tablet twice daily**, right after your morning breakfast and evening dinner.\n"
+                    "- **Important Rules:**\n"
+                    "  - ✅ **Take with meals or milk** (protects your stomach).\n"
+                    "  - 💧 **Drink a full glass of water** with each dose.\n"
+                    "  - 🚫 **Do not crush or chew** extended-release tablets.\n\n"
+                    "### ⏰ Suggested Daily Pill Schedule:\n"
+                    "| Time of Day | Dose | Instructions |\n"
+                    "| :--- | :--- | :--- |\n"
+                    "| **Breakfast (8:30 AM)** | 1 Tablet | Take right after eating |\n"
+                    "| **Dinner (8:00 PM)** | 1 Tablet | Take right after eating |\n\n"
+                    "💡 *Would you like me to read this schedule out loud, or print a large-print reminder card for your fridge?*"
+                )
+                speech = "I have reviewed your medication details. Take one tablet with breakfast and one with dinner after meals. Never skip your water."
 
-        elif "scam" in cat or "fraud" in msg_lower or "bank" in msg_lower or "otp" in msg_lower or "lottery" in msg_lower:
-            response_md = (
-                "## 🚨 SCAM & FRAUD ALERT: High Danger Detected\n\n"
-                "<div class=\"alert-box danger\">\n"
-                "  <h3>🛑 DO NOT REPLY & DO NOT SHARE ANY CODES</h3>\n"
-                "  <p>This message matches a known fraudulent bank impersonation scam trying to steal your account access.</p>\n"
-                "</div>\n\n"
-                "### 🔍 What Makes This a Scam:\n"
-                "1. **False Urgency:** Threatens that your account or electricity will be \"blocked within 2 hours\". Genuine banks never do this.\n"
-                "2. **Suspicious Link:** The link is not an official bank website (`bit.ly` or unofficial URL).\n"
-                "3. **Asking for OTP or PIN:** Legitimate bank officials will **NEVER** ask for your One-Time Password (OTP) or card PIN.\n\n"
-                "### ✅ Exact Steps You Should Take Right Now:\n"
-                "- [ ] **Do NOT click any link** in the message.\n"
-                "- [ ] **Do NOT call the phone number** listed in the message.\n"
-                "- [ ] **Delete the message** or tap \"Report as Spam / Block\".\n"
-                "- [ ] If worried, call your official bank customer care number written on the back of your debit card.\n\n"
-                "🛡️ *You are completely safe as long as you do not click the link or share your OTP.*"
-            )
-            speech = "Warning: This message is a scam. Do not click any links and do not share any OTP. Your bank will never ask for your private codes."
+        elif "scam" in cat or "fraud" in msg_lower or "bank" in msg_lower or "otp" in msg_lower or "धोखा" in req.message or "फ्रॉड" in req.message:
+            if is_hindi:
+                response_md = (
+                    "## 🚨 धोखाधड़ी और फ्रॉड चेतावनी: अत्यधिक खतरा (Scam Alert)\n\n"
+                    "<div class=\"alert-box danger\">\n"
+                    "  <h3>🛑 किसी भी लिंक पर क्लिक न करें और OTP साझा न करें!</h3>\n"
+                    "  <p>यह संदेश एक धोखाधड़ी और फर्जी बैंक या बिजली कटौती का जालसाजी संदेश है।</p>\n"
+                    "</div>\n\n"
+                    "### 🔍 यह फ्रॉड क्यों है:\n"
+                    "1. **झूठी हड़बड़ी:** दावा करता है कि 2 घंटे में खाता या बिजली बंद हो जाएगी। असली विभाग कभी ऐसा नहीं करते।\n"
+                    "2. **संदिग्ध लिंक:** लिंक किसी आधिकारिक बैंक या विभाग का नहीं है।\n"
+                    "3. **OTP या PIN मांगना:** बैंक अधिकारी कभी भी आपका वन-टाइम पासवर्ड (OTP) या पिन नहीं मांगते।\n\n"
+                    "### ✅ आपको अभी क्या करना चाहिए:\n"
+                    "- [ ] संदेश में दिए गए किसी भी लिंक पर क्लिक न करें।\n"
+                    "- [ ] दिए गए नंबर पर फोन न करें।\n"
+                    "- [ ] इस संदेश को तुरंत डिलीट या ब्लॉक करें।\n"
+                    "- [ ] यदि कोई संदेह हो, तो अपनी बैंक पासबुक के पीछे लिखे नंबर पर संपर्क करें।\n\n"
+                    "🛡️ *जब तक आप लिंक नहीं खोलते और OTP नहीं बताते, आप पूरी तरह सुरक्षित हैं।*"
+                )
+                speech = "सावधान! यह संदेश एक धोखाधड़ी है। किसी भी लिंक पर क्लिक न करें और अपना ओटीपी किसी को न बताएं।"
+            else:
+                response_md = (
+                    "## 🚨 SCAM & FRAUD ALERT: High Danger Detected\n\n"
+                    "<div class=\"alert-box danger\">\n"
+                    "  <h3>🛑 DO NOT REPLY & DO NOT SHARE ANY CODES</h3>\n"
+                    "  <p>This message matches a known fraudulent bank impersonation scam trying to steal your account access.</p>\n"
+                    "</div>\n\n"
+                    "### 🔍 What Makes This a Scam:\n"
+                    "1. **False Urgency:** Threatens that your account or electricity will be \"blocked within 2 hours\". Genuine banks never do this.\n"
+                    "2. **Suspicious Link:** The link is not an official bank website (`bit.ly` or unofficial URL).\n"
+                    "3. **Asking for OTP or PIN:** Legitimate bank officials will **NEVER** ask for your One-Time Password (OTP) or card PIN.\n\n"
+                    "### ✅ Exact Steps You Should Take Right Now:\n"
+                    "- [ ] **Do NOT click any link** in the message.\n"
+                    "- [ ] **Do NOT call the phone number** listed in the message.\n"
+                    "- [ ] **Delete the message** or tap \"Report as Spam / Block\".\n"
+                    "- [ ] If worried, call your official bank customer care number written on the back of your debit card.\n\n"
+                    "🛡️ *You are completely safe as long as you do not click the link or share your OTP.*"
+                )
+                speech = "Warning: This message is a scam. Do not click any links and do not share any OTP. Your bank will never ask for your private codes."
 
         elif "bill" in cat or "letter" in msg_lower or "pension" in msg_lower or "electric" in msg_lower:
             response_md = (
@@ -480,7 +524,7 @@ class CompanionOrchestrator:
         words = response_md.split(" ")
         for i in range(0, len(words), 4):
             chunk = " ".join(words[i:i+4]) + " "
-            yield f"data: {json.dumps({'type': 'content', 'delta': chunk})}\n\n"
+            yield f"data: {json.dumps({'type': 'content', 'delta': chunk}, ensure_ascii=False)}\n\n"
             await asyncio.sleep(0.015)
 
         # Emit Critic Verification
@@ -497,7 +541,7 @@ class CompanionOrchestrator:
         await asyncio.sleep(0.05)
 
         # Emit Spoken Verdict
-        yield f"data: {json.dumps({'type': 'verdict', 'speech_text': speech})}\n\n"
+        yield f"data: {json.dumps({'type': 'verdict', 'speech_text': speech}, ensure_ascii=False)}\n\n"
         yield f"data: {json.dumps({'type': 'done'})}\n\n"
 
 
