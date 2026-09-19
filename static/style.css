@@ -536,6 +536,80 @@ body.high-contrast .senior-critic-card {
 .modal-btn.primary { background: var(--accent-blue); color: #fff; }
 .modal-btn.secondary { background: var(--bg-card); color: var(--text-main); }
 
+/* Proactive Wellness Strip */
+.proactive-wellness-bar {
+  background: var(--bg-surface);
+  border-bottom: 2px solid var(--border-color);
+  padding: 10px 24px;
+}
+.wellness-card-strip {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+.wellness-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-card);
+  padding: 8px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  flex: 1;
+  min-width: 250px;
+}
+.wellness-icon {
+  font-size: 24px;
+}
+.wellness-details {
+  display: flex;
+  flex-direction: column;
+}
+.wellness-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+.wellness-metric {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.hydration-track {
+  width: 70px;
+  height: 8px;
+  background: var(--border-color);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 0 4px;
+}
+.hydration-fill {
+  height: 100%;
+  background: var(--accent-blue);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+.btn-mini-action {
+  background: var(--accent-blue);
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  margin-left: auto;
+  white-space: nowrap;
+}
+.btn-mini-action.danger-badge {
+  background: var(--accent-red);
+}
+.btn-mini-action:hover {
+  opacity: 0.9;
+}
+
 /* Print Mode for Seniors */
 @media print {
   .senior-header, .accessibility-toolbar, .action-hubs-container, .senior-input-dock, .modal-overlay {
