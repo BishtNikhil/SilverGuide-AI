@@ -158,5 +158,18 @@ class TestSilverGuideAI(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertIn("data: ", res.text)
 
+    def test_13_multilingual_indic_support(self):
+        """Verify Hindi/Indic language request streams culturally localized guidance."""
+        payload = {
+            "message": "मेरी दवा की खुराक और समय बताएं",
+            "category": "medicine",
+            "language": "hi"
+        }
+        res = self.client.post("/api/chat/stream", json=payload)
+        self.assertEqual(res.status_code, 200)
+        text = res.text
+        self.assertTrue("दवा" in text or "समय" in text or "निर्देशिका" in text)
+
 if __name__ == "__main__":
     unittest.main()
+
