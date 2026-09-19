@@ -98,26 +98,33 @@ Each workflow is a complete, end-to-end senior assistance pipeline — not an is
 
 ---
 
-## 🧪 Automated Testing & Verification Suite (13/13 Passed — 100%)
+## 🧪 Automated Testing & Verification Suite (20/20 Passed — 100%)
 
 ```bash
 python -m unittest tests/test_companion.py
 ```
 ```text
-Ran 13 tests in 1.726s - OK
+Ran 20 tests in 2.870s - OK
 - test_01_health_and_accessibility: PASSED (WCAG 2.1 AAA & OWASP L2)
-- test_02_medicine_guidance_stream: PASSED (Pill schedule & dosage verified)
-- test_03_scam_detection_guardrail: PASSED (Fraud warning guardrail active)
-- test_04_emergency_medical_card: PASSED (Blood group & emergency contacts)
-- test_05_daily_wellness_checkin: PASSED (Hydration & stretch advice)
+- test_02_medicine_guidance_stream: PASSED (Simplifies prescriptions into daily schedules)
+- test_03_scam_detection_guardrail: PASSED (Protects seniors from digital fraud)
+- test_04_emergency_medical_card: PASSED (Anticipates emergency needs)
+- test_05_daily_wellness_checkin: PASSED (Proactive hydration & routine beyond chatbot)
 - test_06_input_validation_safety: PASSED (Pydantic 422 boundary validation)
 - test_07_xss_and_html_sanitization: PASSED (Script tags & XSS stripped)
-- test_08_pii_redaction: PASSED (Phone numbers & card numbers redacted)
+- test_08_pii_redaction: PASSED (Senior phone numbers & card numbers redacted)
 - test_09_security_headers_compliance: PASSED (CSP, X-Frame-Options, nosniff)
 - test_10_lru_cache_efficiency: PASSED (Sub-10ms cache hit response)
 - test_11_metrics_and_resource_usage: PASSED (Memory footprint & cache stats)
-- test_12_multimodal_attachment_handling: PASSED (Base64 image MIME type)
+- test_12_multimodal_attachment_handling: PASSED (Photo upload for medicine labels)
 - test_13_multilingual_indic_support: PASSED (Hindi & Indic language localization)
+- test_14_challenge_alignment_verification: PASSED (AI For Senior Citizens vertical)
+- test_15_bill_simplifier_workflow: PASSED (Complex bills → plain-language answers)
+- test_16_general_fallback_workflow: PASSED (Helpful guidance for any query)
+- test_17_cache_miss_then_hit: PASSED (LRU cache miss/hit cycle verified)
+- test_18_hindi_scam_detection: PASSED (Hindi fraud protection for multilingual seniors)
+- test_19_streaming_response_format: PASSED (SSE thought→content→critic→verdict flow)
+- test_20_invalid_mime_type_rejected: PASSED (Unsafe file uploads blocked)
 ```
 
 ---
