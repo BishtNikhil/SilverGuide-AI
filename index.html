@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SilverGuide AI — Gentle Daily Companion & Safety Shield for Seniors</title>
+  <meta name="description" content="An accessible, trustworthy, voice-enabled GenAI companion built with Google Gemini 2.5 for senior citizens.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <!-- Marked.js for clean Markdown rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="font-size-md">
+  <div class="senior-layout">
+    <!-- Top Accessible Header -->
+    <header class="senior-header" role="banner">
+      <div class="brand-wrap">
+        <div class="logo-icon">👴👵</div>
+        <div>
+          <h1 class="brand-title">SilverGuide AI</h1>
+          <p class="brand-subtitle">Your Gentle Companion & Safety Shield</p>
+        </div>
+      </div>
+
+      <!-- Senior Accessibility Toolbar (WCAG AAA) -->
+      <div class="accessibility-toolbar" role="toolbar" aria-label="Accessibility settings">
+        <div class="text-size-control">
+          <span class="toolbar-label">Text Size:</span>
+          <button class="btn-size active" id="btn-size-md" onclick="setTextSize('md')" title="Standard Text Size">A</button>
+          <button class="btn-size" id="btn-size-lg" onclick="setTextSize('lg')" title="Large Text Size">A+</button>
+          <button class="btn-size" id="btn-size-xl" onclick="setTextSize('xl')" title="Extra Large Text Size">A++</button>
+        </div>
+
+        <button class="btn-tool" id="contrast-toggle" onclick="toggleContrast()" title="Toggle High Contrast Mode">
+          <span id="contrast-icon">🌓</span> <span>High Contrast</span>
+        </button>
+
+        <button class="btn-tool active" id="voice-toggle" onclick="toggleVoice()" title="Toggle Spoken Voice Responses">
+          <span id="voice-icon">🔊</span> <span id="voice-label">Voice: ON</span>
+        </button>
+
+        <button class="btn-tool" onclick="printSeniorSummary()" title="Print Large-Print Reminder Card">
+          <span>🖨️</span> <span>Print Card</span>
+        </button>
+
+        <button class="btn-tool key-btn" onclick="openKeyModal()" title="Gemini API Key Settings">
+          <span>⚙️</span> <span>API Key</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- 4 Big Senior Quick-Action Cards -->
+    <section class="action-hubs-container" aria-label="Daily Helper Hubs">
+      <div class="action-card medicine-card" onclick="selectAction('medicine')">
+        <div class="action-icon">💊</div>
+        <div class="action-info">
+          <h3>Medicine & Pills Helper</h3>
+          <p>Take photo of pill bottle or prescription to see dosage & times in big clear letters.</p>
+        </div>
+        <span class="action-arrow">➔</span>
+      </div>
+
+      <div class="action-card scam-card" onclick="selectAction('scam')">
+        <div class="action-icon">🛡️</div>
+        <div class="action-info">
+          <h3>Is This a Scam?</h3>
+          <p>Paste suspicious bank SMS, lottery messages, or WhatsApp calls to check safety.</p>
+        </div>
+        <span class="action-arrow">➔</span>
+      </div>
+
+      <div class="action-card bill-card" onclick="selectAction('bill')">
+        <div class="action-icon">📄</div>
+        <div class="action-info">
+          <h3>Explain My Bill or Mail</h3>
+          <p>Shows how much to pay, the due date, and what official letters mean in plain English.</p>
+        </div>
+        <span class="action-arrow">➔</span>
+      </div>
+
+      <div class="action-card talk-card" onclick="selectAction('talk')">
+        <div class="action-icon">🗣️</div>
+        <div class="action-info">
+          <h3>Talk With Me</h3>
+          <p>Ask anything by speaking with your voice. I will speak back clearly and gently.</p>
+        </div>
+        <span class="action-arrow">➔</span>
+      </div>
+    </section>
+
+    <!-- Main Results & Conversation Feed -->
+    <main class="senior-feed-container" id="feed-container" role="main">
+      <div class="welcome-banner" id="welcome-banner">
+        <h2>Welcome! How can I help you today?</h2>
+        <p>Pick one of the 4 big buttons above, or speak to me using the big microphone button at the bottom.</p>
+        <div class="safe-tag">
+          <span>🔒 100% Safe & Private</span>
+          <span>•</span>
+          <span>Zero Jargon</span>
+          <span>•</span>
+          <span>Doctor Consultation Reminders</span>
+        </div>
+      </div>
+      <div class="messages-list" id="messages-list"></div>
+    </main>
+
+    <!-- Accessible Input Control Dock -->
+    <footer class="senior-input-dock" role="contentinfo">
+      <!-- Attachment preview -->
+      <div class="attachment-preview" id="attachment-preview" style="display: none;">
+        <span class="att-icon">📎</span>
+        <span class="att-name" id="attachment-name">photo.jpg</span>
+        <button class="att-remove" onclick="clearAttachment()">✕ Remove</button>
+      </div>
+
+      <div class="input-bar">
+        <!-- Hidden file input -->
+        <input type="file" id="file-input" accept="image/*,application/pdf" style="display: none;" onchange="handleFileSelected(event)">
+
+        <!-- Photo upload button -->
+        <button class="dock-btn upload-btn" onclick="document.getElementById('file-input').click()" title="Attach Photo of Medicine, Bill, or Letter">
+          <span class="btn-icon">📷</span>
+          <span class="btn-text">Add Photo</span>
+        </button>
+
+        <!-- Big Voice Mic Button -->
+        <button class="dock-btn mic-btn" id="mic-btn" onclick="toggleSpeech()" title="Click to Speak using Microphone">
+          <span class="btn-icon" id="mic-icon">🎙️</span>
+          <span class="btn-text" id="mic-text">Speak Now</span>
+        </button>
+
+        <!-- Text input -->
+        <textarea
+          id="prompt-input"
+          class="senior-textarea"
+          placeholder="Ask a question or describe your medicine bottle... (or click Speak Now)"
+          rows="1"
+        ></textarea>
+
+        <!-- Big Send Button -->
+        <button class="dock-btn send-btn" id="send-btn" onclick="sendPrompt()" title="Ask SilverGuide">
+          <span class="btn-icon">➔</span>
+          <span class="btn-text">Ask</span>
+        </button>
+      </div>
+    </footer>
+  </div>
+
+  <!-- API Key Modal -->
+  <div class="modal-overlay" id="key-modal" style="display: none;">
+    <div class="modal-card">
+      <h3>⚡ Google Gemini 2.5 Flash Settings</h3>
+      <p>Enter your Gemini API key from Google AI Studio. If left empty, SilverGuide runs in verified offline companion mode.</p>
+      <input type="password" id="api-key-input" placeholder="AIzaSy..." class="modal-input">
+      <div class="modal-actions">
+        <button class="modal-btn secondary" onclick="closeKeyModal()">Cancel</button>
+        <button class="modal-btn primary" onclick="saveApiKey()">Save Key</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
